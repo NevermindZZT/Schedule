@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name = "CourseView">
+        <attr name="courseHeight" format="dimension" />
+        <attr name="weekTitleHeight" format="dimension" />
+        <attr name="courseTimeTitleWidth" format="dimension" />
+        <attr name="startOfWeek" format="enum">
+            <enum name="sunday" value="0" />
+            <enum name="monday" value="1" />
+            <enum name="tuesday" value="2" />
+            <enum name="wednesday" value="3" />
+            <enum name="thursday" value="4" />
+            <enum name="friday" value="5" />
+            <enum name="saturday" value="6" />
+        </attr>
+    </declare-styleable>
+
+</resources>

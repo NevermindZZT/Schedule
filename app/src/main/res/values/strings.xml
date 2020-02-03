@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Schedule</string>
+
+    <string name="main_activity_navigation_menu_about">关于</string>
+    
+    <string name="about_activity_title">关于</string>
+</resources>
