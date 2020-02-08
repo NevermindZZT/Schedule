@@ -3,6 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <group >
         <item
+            android:id="@+id/nav_new"
+            android:icon="@drawable/ic_new"
+            android:title="@string/main_activity_navigation_menu_new_table" />
+        <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_about"
             android:title="@string/main_activity_navigation_menu_about" />

@@ -1,7 +1,24 @@
 <resources>
     <string name="app_name">Schedule</string>
 
+    <string name="main_activity_navigation_menu_new_table">创建课表</string>
     <string name="main_activity_navigation_menu_about">关于</string>
-    
+    <string name="main_activity_toolbar_menu_edit_mode">编辑模式</string>
+    <string name="main_activity_toolbar_menu_edit_complete">完成编辑</string>
+    <string name="main_activity_toast_please_select_class">请选择有效课程</string>
+    <string name="main_activity_title_edit_mode">编辑模式</string>
+
     <string name="about_activity_title">关于</string>
+
+    <string name="course_table_create_activity_title">创建课表</string>
+    <string name="course_table_create_activity_new_title">新建空课表</string>
+    <string name="course_table_create_activity_new_content">新建一个课表，新课表中没有任何课程和课程时间数据</string>
+    <string name="course_table_create_activity_new_input_hint">请输入新课表名</string>
+    <string name="course_table_create_activity_new_button">新建</string>
+    <string name="course_table_create_activity_copy_title">复制已有课表</string>
+    <string name="course_table_create_activity_copy_content">从已有的课表复制，保留被复制课表的课程，复制后新课表和旧课表相互独立</string>
+    <string name="course_table_create_activity_copy_choose_src">选择需要复制的课表</string>
+    <string name="course_table_create_activity_copy_input_hint">请输入复制后的课表名</string>
+    <string name="course_table_create_activity_copy_button">复制</string>
+    <string name="course_table_create_activity_toast_course_table_name_empty">课表名无效</string>
 </resources>
