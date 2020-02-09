@@ -6,7 +6,12 @@ import org.litepal.crud.LitePalSupport
 class CourseTable
     constructor(var id : Int = 0,
                 var name : String ?= null,
-                var default : Boolean = false) : LitePalSupport() {
+                var isDefault : Int = DEFAULT_FALSE) : LitePalSupport() {
+
+    companion object {
+        const val DEFAULT_FALSE = 0
+        const val DEFAULT_TRUE = 1
+    }
 
     @Column(ignore = true)
     var courseList: MutableList<Course> ?= null

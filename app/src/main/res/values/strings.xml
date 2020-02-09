@@ -3,8 +3,9 @@
 
     <string name="main_activity_navigation_menu_new_table">创建课表</string>
     <string name="main_activity_navigation_menu_about">关于</string>
-    <string name="main_activity_toolbar_menu_edit_mode">编辑模式</string>
-    <string name="main_activity_toolbar_menu_edit_complete">完成编辑</string>
+    <string name="main_activity_toolbar_menu_table_edit">编辑课表</string>
+    <string name="main_activity_toolbar_menu_edit_mode">课程调整</string>
+    <string name="main_activity_toolbar_menu_edit_complete">完成调整</string>
     <string name="main_activity_toast_please_select_class">请选择有效课程</string>
     <string name="main_activity_title_edit_mode">编辑模式</string>
 
@@ -21,4 +22,14 @@
     <string name="course_table_create_activity_copy_input_hint">请输入复制后的课表名</string>
     <string name="course_table_create_activity_copy_button">复制</string>
     <string name="course_table_create_activity_toast_course_table_name_empty">课表名无效</string>
+
+    <string name="course_table_edit_activity_title">编辑课表</string>
+    <string name="course_table_edit_activity_header_title">课表信息</string>
+    <string name="course_table_edit_activity_header_is_default">默认课表</string>
+    <string name="course_table_edit_activity_list_title">课程时间列表</string>
+
+    <string name="course_time_dialog_title">课程时间</string>
+    <string name="course_time_dialog_negative_button_text">取消</string>
+    <string name="course_time_dialog_positive_button_text">确认</string>
+
 </resources>

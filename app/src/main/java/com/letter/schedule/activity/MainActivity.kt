@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         field = value
         courseTableNameText.text = if (value) getString(R.string.main_activity_toolbar_menu_edit_mode)
             else ""
-        toolbar.menu.getItem(0).title =
+        toolbar.menu.getItem(1).title =
             if (value) getString(R.string.main_activity_toolbar_menu_edit_complete)
             else getString(R.string.main_activity_toolbar_menu_edit_mode)
 
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         courseView.onClickListener = onCourseViewClick
 
         courseView.post {
-            selectedTableId = 0
+            selectedTableId = getDefaultTableId()
         }
     }
 
@@ -93,6 +93,11 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
+            R.id.toolbar_table_edit -> {
+                val intent = Intent(this, CourseTableEditActivity::class.java)
+                intent.putExtra("table_id", selectedTableId)
+                startActivity(intent)
+            }
             R.id.toolbar_edit -> {
                 editMode = !editMode
             }
@@ -110,6 +115,12 @@ class MainActivity : AppCompatActivity() {
         }
         drawerLayout.closeDrawers()
         true
+    }
+
+    private fun getDefaultTableId() : Int {
+        val courseTableList = LitePal.where("isDefault like ?", "1")
+            .find<CourseTable>()
+        return if (courseTableList.isNotEmpty()) courseTableList[0].id else 0
     }
 
     /**

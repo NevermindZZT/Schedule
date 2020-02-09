@@ -1,5 +1,6 @@
 package com.letter.schedule.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -69,6 +70,10 @@ class CourseTableCreateActivity : AppCompatActivity(), View.OnClickListener {
                     val courseTable = CourseTable()
                     courseTable.name = newCourseTableNameText.text.toString()
                     courseTable.save()
+                    val intent = Intent(this, CourseTableEditActivity::class.java)
+                    intent.putExtra("table_id", courseTable.id)
+                    startActivity(intent)
+                    finish()
                 }
             }
             copyButton -> {
@@ -93,6 +98,10 @@ class CourseTableCreateActivity : AppCompatActivity(), View.OnClickListener {
                         .find<Course>()) {
                         value.copy(courseTable.id).save()
                     }
+                    val intent = Intent(this, CourseTableEditActivity::class.java)
+                    intent.putExtra("table_id", courseTable.id)
+                    startActivity(intent)
+                    finish()
                 }
             }
         }

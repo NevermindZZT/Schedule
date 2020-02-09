@@ -10,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.CourseTableCreateActivity"></activity>
+        <activity android:name=".activity.CourseEditActivity"></activity>
+        <activity android:name=".activity.CourseTableEditActivity" />
+        <activity android:name=".activity.CourseTableCreateActivity" />
         <activity android:name=".activity.AboutActivity" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
