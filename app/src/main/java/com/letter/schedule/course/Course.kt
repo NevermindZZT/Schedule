@@ -24,7 +24,7 @@ class Course
                 var location : String ?= null,
                 var teacher : String ?= null,
                 var startTime : String ?= null,
-                var length : Int = 0,
+                var length : Int = 1,
                 var weekDay : Int = WEEK_SUNDAY,
                 var color : Int = 0): LitePalSupport() {
 

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="color_picker_values">
+        <item>#FFFFFFFF</item>
+        <item>#FFFFFF00</item>
+        <item>#FFFF00FF</item>
+        <item>#FF00FFFF</item>
+        <item>#FFFFFF80</item>
+        <item>#FFFF80FF</item>
+        <item>#FF80FFFF</item>
+        <item>#FF800000</item>
+        <item>#FF008000</item>
+        <item>#FF000080</item>
+        <item>#FF0080FF</item>
+        <item>#FFFf8000</item>
+        <item>#FFFF0000</item>
+        <item>#FF00FF00</item>
+        <item>#FF0000FF</item>
+        <item>#FF000000</item>
+    </string-array>
+    <string-array name="week_title_content">
+        <item>周日</item>
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+    </string-array>
+    <string-array name="setting_start_of_week_entries">
+        <item>周日</item>
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+    </string-array>
+    <string-array name="setting_start_of_week_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="setting_course_height_entries">
+        <item>超小</item>
+        <item>小</item>
+        <item>一般</item>
+        <item>大</item>
+        <item>超大</item>
+    </string-array>
+    <string-array name="setting_course_height_values">
+        <item>32</item>
+        <item>48</item>
+        <item>64</item>
+        <item>96</item>
+        <item>128</item>
+    </string-array>
+</resources>

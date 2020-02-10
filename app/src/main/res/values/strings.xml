@@ -1,15 +1,17 @@
 <resources>
-    <string name="app_name">Schedule</string>
+    <string name="app_name">轻排课</string>
 
     <string name="main_activity_navigation_menu_new_table">创建课表</string>
+    <string name="main_activity_navigation_menu_setting">设置</string>
     <string name="main_activity_navigation_menu_about">关于</string>
     <string name="main_activity_toolbar_menu_table_edit">编辑课表</string>
     <string name="main_activity_toolbar_menu_edit_mode">课程调整</string>
     <string name="main_activity_toolbar_menu_edit_complete">完成调整</string>
-    <string name="main_activity_toast_please_select_class">请选择有效课程</string>
     <string name="main_activity_title_edit_mode">编辑模式</string>
-
-    <string name="about_activity_title">关于</string>
+    <string name="main_activity_add_table_button">添加课程表</string>
+    <string name="main_activity_toast_please_select_class">请选择有效课程</string>
+    <string name="main_activity_toast_course_table_invalid">当前课程表无效</string>
+    <string name="main_activity_toast_please_exit_edit_mode">请先退出课程调整模式再进行操作</string>
 
     <string name="course_table_create_activity_title">创建课表</string>
     <string name="course_table_create_activity_new_title">新建空课表</string>
@@ -27,9 +29,38 @@
     <string name="course_table_edit_activity_header_title">课表信息</string>
     <string name="course_table_edit_activity_header_is_default">默认课表</string>
     <string name="course_table_edit_activity_list_title">课程时间列表</string>
+    <string name="course_table_edit_activity_delete_dialog_message">确认删除当前课程表?</string>
+    <string name="course_table_edit_activity_delete_positive_button">确认</string>
+    <string name="course_table_edit_activity_delete_negative_button">取消</string>
+
+    <string name="course_edit_activity_title">编辑课程</string>
+    <string name="course_edit_activity_toolbar_menu_save">保存</string>
+    <string name="course_edit_activity_toolbar_menu_delete">删除</string>
+    <string name="course_edit_activity_delete_dialog_message">确认删除当前课程?</string>
+    <string name="course_edit_activity_delete_positive_button">确认</string>
+    <string name="course_edit_activity_delete_negative_button">取消</string>
+    <string name="course_edit_activity_name_hint">课程名</string>
+    <string name="course_edit_activity_teacher_hint">授课教师</string>
+    <string name="course_edit_activity_location_hint">上课地点</string>
+    <string name="course_edit_activity_theme_text">主题色</string>
+    <string name="course_edit_activity_toast_name_empty">课程名不能为空</string>
+    <string name="course_edit_activity_toast_save_complete">保存成功</string>
+    <string name="course_edit_activity_toast_delete_complete">删除成功</string>
+
+    <string name="setting_activity_title">设置</string>
+
+    <string name="about_activity_title">关于</string>
+    <string name="about_activity_copyright_text">© 2020 Letter All rights reserved</string>
 
     <string name="course_time_dialog_title">课程时间</string>
     <string name="course_time_dialog_negative_button_text">取消</string>
     <string name="course_time_dialog_positive_button_text">确认</string>
+
+    <string name="setting_start_of_week_title">星期第一天</string>
+    <string name="setting_start_of_week_summary">选择每周开始的日子</string>
+    <string name="setting_course_height_title">课程高度</string>
+    <string name="setting_course_height_summary">设置课程表中，每个课时课程的高度</string>
+    <string name="setting_show_end_time_title">显示课时结束时间</string>
+    <string name="setting_show_end_time_summary">在课程表的课时上，显示该课时结束的时间</string>
 
 </resources>

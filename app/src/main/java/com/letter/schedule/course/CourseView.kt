@@ -44,7 +44,7 @@ class CourseView @JvmOverloads
     /**
      * 课程高度
      */
-    private var courseHeight = 0f
+    var courseHeight = 0f
 
     /**
      * 星期标题栏高度
@@ -59,7 +59,12 @@ class CourseView @JvmOverloads
     /**
      * 一周开始
      */
-    private var startOfWeek = WEEK_SUNDAY
+    var startOfWeek = WEEK_SUNDAY
+
+    /**
+     * 显示课时结束时间
+     */
+    var showEndTime = true
 
     /**
      * 滚动视图
@@ -145,6 +150,7 @@ class CourseView @JvmOverloads
             R.styleable.CourseView_courseTimeTitleWidth,
             context.resources.displayMetrics.density * DEFAULT_COURSE_TIME_TITLE_WIDTH_DP)
         startOfWeek = attrArray.getInt(R.styleable.CourseView_startOfWeek, WEEK_MONDAY)
+        showEndTime = attrArray.getBoolean(R.styleable.CourseView_showEndTime, true)
 
         attrArray.recycle()
 
@@ -248,7 +254,7 @@ class CourseView @JvmOverloads
     /**
      * 初始化星期数据
      */
-    private fun initWeekTitle() {
+    fun initWeekTitle() {
         weekLayout.removeAllViews()
         val layoutParams = LinearLayout.LayoutParams(
             ((widthMeasured - courseTimeTitleWidth) / 7).toInt(),
@@ -278,6 +284,7 @@ class CourseView @JvmOverloads
             timeItemView.layoutParams = layoutParams
             timeItemView.courseTime = value
             timeItemView.courseIndex = index++
+            timeItemView.showEndTime = showEndTime
             timeLayout.addView(timeItemView)
         }
     }
@@ -290,7 +297,7 @@ class CourseView @JvmOverloads
         classLayout.layoutParams.height = (courseTimeList.size * courseHeight).toInt()
         val courseWidth = ((widthMeasured - courseTimeTitleWidth) / 7).toInt()
         for (course in courseList) {
-            for (i in 0 until courseTimeList.size - 1) {
+            for (i in 0 until courseTimeList.size) {
                 if (course.startTime == courseTimeList[i].startTime) {
                     val layoutParams = LayoutParams(
                         courseWidth,
@@ -375,26 +382,4 @@ class CourseView @JvmOverloads
         initClass()
     }
 
-    /**
-     * 通知课程更新
-     * @param course Course 课程
-     * @param classItemView ClassItemView 课程视图
-     */
-    fun notifyClassUpdate(course: Course, classItemView: ClassItemView) {
-        val courseWidth = ((widthMeasured - courseTimeTitleWidth) / 7).toInt()
-        for (i in 0 until courseTimeList.size - 1) {
-            if (course.startTime == courseTimeList[i].startTime) {
-                val layoutParams = classItemView.layoutParams
-                if (layoutParams is LayoutParams) {
-                    layoutParams.width = courseWidth
-                    layoutParams.height = (course.length * courseHeight).toInt()
-                    layoutParams.topMargin = (i * courseHeight).toInt()
-                    layoutParams.leftMargin = ((course.weekDay - startOfWeek + 7) % 7) * courseWidth
-                }
-                classItemView.course = course
-                modifyClassBackground(classItemView, course.color)
-                break
-            }
-        }
-    }
 }

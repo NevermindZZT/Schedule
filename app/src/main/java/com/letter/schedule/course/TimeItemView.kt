@@ -3,6 +3,7 @@ package com.letter.schedule.course
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import com.letter.schedule.R
 import kotlinx.android.synthetic.main.layout_course_time_item.view.*
@@ -34,6 +35,12 @@ constructor(context: Context,
     set(value) {
         field = value
         orderText.text = field.toString()
+    }
+
+    var showEndTime: Boolean = true
+    set(value) {
+        field = value
+        endTimeText.visibility = if (value) View.VISIBLE else View.GONE
     }
 
     init {

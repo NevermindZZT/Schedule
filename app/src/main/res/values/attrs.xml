@@ -13,6 +13,7 @@
             <enum name="friday" value="5" />
             <enum name="saturday" value="6" />
         </attr>
+        <attr name="showEndTime" format="boolean" />
     </declare-styleable>
 
 </resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="start_of_week"
+        android:title="@string/setting_start_of_week_title"
+        android:summary="@string/setting_start_of_week_summary"
+        android:entries="@array/setting_start_of_week_entries"
+        android:entryValues="@array/setting_start_of_week_values" />
+
+    <ListPreference
+        android:key="course_height"
+        android:title="@string/setting_course_height_title"
+        android:summary="@string/setting_course_height_summary"
+        android:entries="@array/setting_course_height_entries"
+        android:entryValues="@array/setting_course_height_values" />
+
+    <SwitchPreference
+        android:key="show_end_time"
+        android:title="@string/setting_show_end_time_title"
+        android:summary="@string/setting_show_end_time_summary" />
+
+</PreferenceScreen>

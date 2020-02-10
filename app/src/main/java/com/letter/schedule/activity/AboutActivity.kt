@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import com.letter.schedule.BuildConfig
 import com.letter.schedule.R
 import kotlinx.android.synthetic.main.activity_about.*
 
@@ -24,6 +25,8 @@ class AboutActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
         supportActionBar?.title = getString(R.string.about_activity_title)
+
+        versionText.text = BuildConfig.VERSION_NAME
     }
 
     /**

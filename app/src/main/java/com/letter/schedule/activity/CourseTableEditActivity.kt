@@ -5,12 +5,15 @@ import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.letter.schedule.R
 import com.letter.schedule.adapter.CourseTimeAdapter
+import com.letter.schedule.course.Course
 import com.letter.schedule.course.CourseTable
 import com.letter.schedule.course.CourseTime
 import com.letter.schedule.dialog.CourseTimeDialog
@@ -74,6 +77,12 @@ class CourseTableEditActivity : AppCompatActivity() {
         courseTable?.save()
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_course_table_edit_toolbar, menu)
+        return true
+    }
+
     /**
      * 菜单选项选择处理
      * @param item 被选中的选项
@@ -82,8 +91,40 @@ class CourseTableEditActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
+            R.id.delete -> {
+                val dialog = androidx.appcompat.app.AlertDialog.Builder(this, R.style.DialogTheme)
+                    .setMessage(R.string.course_table_edit_activity_delete_dialog_message)
+                    .setPositiveButton(R.string.course_table_edit_activity_delete_positive_button,
+                        {
+                                dialogInterface, i ->
+                            dialogInterface.dismiss()
+                            deleteCourseTable()
+                            finish()
+                        })
+                    .setNegativeButton(R.string.course_table_edit_activity_delete_negative_button,
+                        {
+                                dialogInterface, i ->
+                            dialogInterface.dismiss()
+                        })
+                    .create()
+                dialog.show()
+            }
         }
         return true
+    }
+
+    private fun deleteCourseTable() {
+        if (courseTimeList != null) {
+            for (value in courseTimeList!!) {
+                value.delete()
+            }
+        }
+        for (value in LitePal
+            .where("tableId like ?", courseTable?.id.toString())
+            .find<Course>()) {
+            value.delete()
+        }
+        LitePal.delete(CourseTable::class.java, courseTable?.id?.toLong() ?: 0)
     }
 
     private fun showTimeDialog(init: (CourseTimeDialog.() -> Unit) ?= null) {

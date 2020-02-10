@@ -35,7 +35,7 @@ class CourseTimeDialog
 
     private fun initPicker() {
         val hoursList = mutableListOf<String>()
-        for (i in 0..11) {
+        for (i in 0..23) {
             hoursList.add(i.toString())
         }
         val minuteList = mutableListOf<String>()

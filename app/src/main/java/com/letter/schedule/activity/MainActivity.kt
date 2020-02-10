@@ -3,13 +3,13 @@ package com.letter.schedule.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
+import androidx.preference.PreferenceManager
 import com.letter.schedule.R
 import com.letter.schedule.course.ClassItemView
 import com.letter.schedule.course.Course
@@ -36,17 +36,16 @@ class MainActivity : AppCompatActivity() {
     set(value) {
         field = value
         courseTableNameText.text = if (value) getString(R.string.main_activity_toolbar_menu_edit_mode)
-            else ""
+            else LitePal.find<CourseTable>(selectedTableId.toLong())?.name ?: ""
         toolbar.menu.getItem(1).title =
             if (value) getString(R.string.main_activity_toolbar_menu_edit_complete)
             else getString(R.string.main_activity_toolbar_menu_edit_mode)
-
+        toolbar.menu.getItem(1).setIcon(
+            if (value) R.drawable.ic_toolbar_complete
+            else R.drawable.ic_toolbar_order)
     }
 
     private var selectedTableId: Int = 0
-    set(value) {
-        field = loadCourseTable(value)
-    }
 
     private var selectedCourse: Course ?= null
 
@@ -67,11 +66,23 @@ class MainActivity : AppCompatActivity() {
         navigationView.setNavigationItemSelectedListener(onNavigationViewItemClick)
 
         courseTableNameText.setOnClickListener(onViewClick)
+        tableAddButton.setOnClickListener(onViewClick)
 
         courseView.onClickListener = onCourseViewClick
 
+        selectedTableId = getDefaultTableId()
+    }
+
+    override fun onResume() {
+        super.onResume()
         courseView.post {
-            selectedTableId = getDefaultTableId()
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            courseView.startOfWeek = sharedPreferences.getString("start_of_week", "1")?.toInt() ?: 1
+            courseView.courseHeight =
+                (sharedPreferences.getString("course_height", "64")?.toInt() ?: 64) *
+                        resources.displayMetrics.density
+            courseView.showEndTime = sharedPreferences.getBoolean("show_end_time", false)
+            loadCourseTable(selectedTableId)
         }
     }
 
@@ -91,15 +102,20 @@ class MainActivity : AppCompatActivity() {
      * @return Boolean 动作是否被处理
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
-            R.id.toolbar_table_edit -> {
-                val intent = Intent(this, CourseTableEditActivity::class.java)
-                intent.putExtra("table_id", selectedTableId)
-                startActivity(intent)
-            }
-            R.id.toolbar_edit -> {
-                editMode = !editMode
+        if (selectedTableId == 0) {
+            Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            when (item.itemId) {
+                android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
+                R.id.toolbar_table_edit -> {
+                    val intent = Intent(this, CourseTableEditActivity::class.java)
+                    intent.putExtra("table_id", selectedTableId)
+                    startActivity(intent)
+                }
+                R.id.toolbar_edit -> {
+                    editMode = !editMode
+                }
             }
         }
         return true
@@ -110,8 +126,9 @@ class MainActivity : AppCompatActivity() {
      */
     private val onNavigationViewItemClick: ((item: MenuItem) -> Boolean) = {
         when (it.itemId) {
-            R.id.nav_about -> startActivity(Intent(this, AboutActivity::class.java))
             R.id.nav_new -> startActivity(Intent(this, CourseTableCreateActivity::class.java))
+            R.id.nav_setting -> startActivity(Intent(this, SettingActivity::class.java))
+            R.id.nav_about -> startActivity(Intent(this, AboutActivity::class.java))
         }
         drawerLayout.closeDrawers()
         true
@@ -126,9 +143,10 @@ class MainActivity : AppCompatActivity() {
     /**
      * 加载课程表
      * @param tableId Int 课程表id
-     * @return Int 实际加载的课程表id
      */
-    private fun loadCourseTable(tableId: Int): Int {
+    private fun loadCourseTable(tableId: Int) {
+        courseView.weekText = resources.getStringArray(R.array.week_title_content)
+        courseView.initWeekTitle()
         var courseTable = LitePal.find<CourseTable>(tableId.toLong())
         if (courseTable == null) {
             val courseTableList = LitePal.findAll<CourseTable>()
@@ -138,14 +156,15 @@ class MainActivity : AppCompatActivity() {
         }
         if (courseTable != null) {
             courseView.courseTimeList =
-                LitePal.where("tableId like ?", tableId.toString())
+                LitePal.where("tableId like ?", courseTable.id.toString())
                     .find<CourseTime>().toMutableList()
             courseView.courseList =
-                LitePal.where("tableId like ?", tableId.toString())
+                LitePal.where("tableId like ?", courseTable.id.toString())
                     .find<Course>().toMutableList()
-            courseTableNameText.text = courseTable.name
         }
-        return courseTable?.id ?: 0
+        courseTableNameText.text = courseTable?.name
+        emptyLayout.activeViewId = if (courseTable == null) 0 else 1
+        selectedTableId =  courseTable?.id ?: 0
     }
 
     /**
@@ -154,21 +173,27 @@ class MainActivity : AppCompatActivity() {
     private val onViewClick: ((view: View) -> Unit) = {
         when (it) {
             courseTableNameText -> {
-                val courseTableList = LitePal.findAll<CourseTable>()
-                if (courseTableList.isNotEmpty()) {
-                    val nameList = mutableListOf<String>()
-                    for (value in courseTableList) {
-                        nameList.add(value.name ?: "")
+                if (!editMode) {
+                    val courseTableList = LitePal.findAll<CourseTable>()
+                    if (courseTableList.isNotEmpty()) {
+                        val nameList = mutableListOf<String>()
+                        for (value in courseTableList) {
+                            nameList.add(value.name ?: "")
+                        }
+                        val builder = AlertDialog.Builder(this, R.style.DialogTheme)
+                            .setItems(nameList.toTypedArray(),
+                                {dialog, which ->
+                                    loadCourseTable(courseTableList[which].id)
+                                    dialog.dismiss()
+                                })
+                        builder.create().show()
                     }
-                    val builder = AlertDialog.Builder(this, R.style.DialogTheme)
-                        .setItems(nameList.toTypedArray(),
-                            {dialog, which ->
-                                selectedTableId = courseTableList[which].id
-                                dialog.dismiss()
-                            })
-                    builder.create().show()
+                } else {
+                    Toast.makeText(this, R.string.main_activity_toast_please_exit_edit_mode, Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
+            tableAddButton -> startActivity(Intent(this, CourseTableCreateActivity::class.java))
         }
     }
 
@@ -212,12 +237,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else {
-
-        }
-        if (hasClass) {
-            Log.d(TAG, "course ${course?.name} clicked")
-        } else {
-            Log.d(TAG, "empty view clicked: time ${courseTime?.startTime}, week $weekday")
+            val intent = Intent(this, CourseEditActivity::class.java)
+            intent.putExtra("table_id", selectedTableId)
+            if (hasClass) {
+                intent.putExtra("course_id", course?.id)
+            } else {
+                intent.putExtra("course_time_id", courseTime?.id)
+                intent.putExtra("week", weekday)
+            }
+            startActivity(intent)
         }
     }
 }
