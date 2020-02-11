@@ -12,5 +12,14 @@
             android:icon="@drawable/ic_toolbar_order"
             android:title="@string/main_activity_toolbar_menu_edit_mode"
             app:showAsAction="always"/>
+        <item
+            android:id="@+id/toolbar_save_picture"
+            android:title="@string/main_activity_toolbar_menu_save_picture"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/toolbar_share"
+            android:icon="@drawable/ic_toolbar_share"
+            android:title="@string/main_activity_toolbar_menu_share"
+            app:showAsAction="never" />
     </group>
 </menu>

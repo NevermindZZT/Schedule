@@ -7,6 +7,8 @@ import android.widget.FrameLayout
 
 /**
  * 空白布局
+ * @property activeViewId Int 激活的View id
+ * @constructor 构建一个空白布局
  * @author Letter(nevermindzzt@gmail.com)
  * @since 1.0.0
  */

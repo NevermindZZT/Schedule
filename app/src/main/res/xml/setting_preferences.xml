@@ -20,4 +20,15 @@
         android:title="@string/setting_show_end_time_title"
         android:summary="@string/setting_show_end_time_summary" />
 
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="show_time_index"
+        android:summary="@string/setting_show_time_index_summary"
+        android:title="@string/setting_show_time_index_title" />
+
+    <SwitchPreference
+        android:key="show_course_border"
+        android:summary="@string/setting_show_course_border_summary"
+        android:title="@string/setting_show_course_border_title" />
+
 </PreferenceScreen>

@@ -24,6 +24,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.litepal.LitePal
 import org.litepal.extension.find
 
+/**
+ * 课程表编辑活动
+ * @author Letter(nevermindzzt@gmail.com)
+ * @since 1.0.0
+ */
 class CourseTableEditActivity : AppCompatActivity() {
 
     companion object {
@@ -77,7 +82,9 @@ class CourseTableEditActivity : AppCompatActivity() {
         courseTable?.save()
     }
 
-
+    /**
+     * 构建选项菜单
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_course_table_edit_toolbar, menu)
         return true
@@ -113,6 +120,9 @@ class CourseTableEditActivity : AppCompatActivity() {
         return true
     }
 
+    /**
+     * 删除当前课程表
+     */
     private fun deleteCourseTable() {
         if (courseTimeList != null) {
             for (value in courseTimeList!!) {
@@ -127,6 +137,10 @@ class CourseTableEditActivity : AppCompatActivity() {
         LitePal.delete(CourseTable::class.java, courseTable?.id?.toLong() ?: 0)
     }
 
+    /**
+     * 显示时间对话框
+     * @param init [@kotlin.ExtensionFunctionType] Function1<CourseTimeDialog, Unit>? 对话框初始化参数
+     */
     private fun showTimeDialog(init: (CourseTimeDialog.() -> Unit) ?= null) {
         val dialog = CourseTimeDialog(this, R.style.DialogTheme)
         dialog.show {
@@ -156,6 +170,9 @@ class CourseTableEditActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * View点击处理
+     */
     private val onViewClick : (view: View) -> Unit = {
         when (it) {
             addButton -> showTimeDialog()
@@ -172,6 +189,9 @@ class CourseTableEditActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 列表条目点击处理
+     */
     private val onItemClick : ((adapter: RecyclerView.Adapter<CourseTimeAdapter.ViewHolder>, position: Int) -> Unit) = {
             adapter: RecyclerView.Adapter<CourseTimeAdapter.ViewHolder>, position: Int ->
         when (adapter) {
@@ -184,6 +204,9 @@ class CourseTableEditActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 列表条目长按处理
+     */
     private val onItemLongClick : ((adapter: RecyclerView.Adapter<CourseTimeAdapter.ViewHolder>, position: Int) -> Unit) = {
             adapter: RecyclerView.Adapter<CourseTimeAdapter.ViewHolder>, position: Int ->
         when (adapter) {
@@ -195,7 +218,7 @@ class CourseTableEditActivity : AppCompatActivity() {
                             dialogInterface, i ->
                             courseTimeList?.get(position)?.delete()
                             courseTimeList?.removeAt(position)
-                            courseTimeAdapter?.notifyItemRemoved(position)
+                            courseTimeAdapter?.notifyDataSetChanged()
                         })
                     .create()
                 dialog.show()

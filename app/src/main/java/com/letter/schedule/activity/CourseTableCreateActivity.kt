@@ -20,6 +20,8 @@ import org.litepal.extension.findAll
 /**
  * 课程表新建活动
  * @property courseTableList List<CourseTable> 已有的课程表列表
+ * @author Letter(nevermindzzt@gmail.com)
+ * @since 1.0.0
  */
 class CourseTableCreateActivity : AppCompatActivity(), View.OnClickListener {
 

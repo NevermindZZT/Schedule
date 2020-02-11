@@ -15,6 +15,14 @@ import kotlinx.android.synthetic.main.activity_course_edit.*
 import org.litepal.LitePal
 import org.litepal.extension.find
 
+/**
+ * 课程编辑活动
+ * @property course Course 课程
+ * @property courseTimeArray Array<String> 课程时间列表
+ * @property onViewClick Function1<[@kotlin.ParameterName] View, Unit> View点击处理
+ * @author Letter(nevermindzzt@gmail.com)
+ * @since 1.0.0
+ */
 class CourseEditActivity : AppCompatActivity() {
 
     companion object {
@@ -87,6 +95,11 @@ class CourseEditActivity : AppCompatActivity() {
         return true
     }
 
+    /**
+     * 构建选项菜单
+     * @param menu Menu 菜单
+     * @return Boolean
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_course_edit_toolbar, menu)
         return true

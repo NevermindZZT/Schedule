@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.letter.schedule">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".ScheduleApplication"
         android:allowBackup="true"
@@ -10,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SettingActivity"></activity>
+        <activity android:name=".activity.CourseTableListActivity"></activity>
+        <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.CourseEditActivity" />
         <activity android:name=".activity.CourseTableEditActivity" />
         <activity android:name=".activity.CourseTableCreateActivity" />

@@ -1,8 +1,12 @@
 package com.letter.schedule.activity
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -10,15 +14,21 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.preference.PreferenceManager
+import com.blankj.utilcode.util.ConvertUtils
+import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.IntentUtils
 import com.letter.schedule.R
-import com.letter.schedule.course.ClassItemView
-import com.letter.schedule.course.Course
-import com.letter.schedule.course.CourseTable
-import com.letter.schedule.course.CourseTime
+import com.letter.schedule.course.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_shared_table.view.*
 import org.litepal.LitePal
 import org.litepal.extension.find
 import org.litepal.extension.findAll
+import java.io.File
+import java.io.FileOutputStream
+import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * 应用主活动
@@ -49,6 +59,8 @@ class MainActivity : AppCompatActivity() {
 
     private var selectedCourse: Course ?= null
 
+    private var courseLongClick: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -76,12 +88,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         courseView.post {
-            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-            courseView.startOfWeek = sharedPreferences.getString("start_of_week", "1")?.toInt() ?: 1
-            courseView.courseHeight =
-                (sharedPreferences.getString("course_height", "64")?.toInt() ?: 64) *
-                        resources.displayMetrics.density
-            courseView.showEndTime = sharedPreferences.getBoolean("show_end_time", false)
             loadCourseTable(selectedTableId)
         }
     }
@@ -102,19 +108,40 @@ class MainActivity : AppCompatActivity() {
      * @return Boolean 动作是否被处理
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (selectedTableId == 0) {
-            Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
-                .show()
-        } else {
-            when (item.itemId) {
-                android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
-                R.id.toolbar_table_edit -> {
+        when (item.itemId) {
+            android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
+            R.id.toolbar_table_edit -> {
+                if (selectedTableId == 0) {
+                    Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
                     val intent = Intent(this, CourseTableEditActivity::class.java)
                     intent.putExtra("table_id", selectedTableId)
                     startActivity(intent)
                 }
-                R.id.toolbar_edit -> {
+            }
+            R.id.toolbar_edit -> {
+                if (selectedTableId == 0) {
+                    Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
                     editMode = !editMode
+                }
+            }
+            R.id.toolbar_save_picture -> {
+                val file = saveCourseTableAsPicture()
+                Toast.makeText(this,
+                    if (file != null) R.string.main_activity_toast_save_picture_success
+                    else R.string.main_activity_toast_save_picture_fail,
+                    Toast.LENGTH_SHORT)
+                    .show()
+            }
+            R.id.toolbar_share -> {
+                if (selectedTableId == 0) {
+                    Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    shareCourseTable()
                 }
             }
         }
@@ -134,6 +161,10 @@ class MainActivity : AppCompatActivity() {
         true
     }
 
+    /**
+     * 获取默认课表的id
+     * @return Int 默认课表id
+     */
     private fun getDefaultTableId() : Int {
         val courseTableList = LitePal.where("isDefault like ?", "1")
             .find<CourseTable>()
@@ -145,6 +176,15 @@ class MainActivity : AppCompatActivity() {
      * @param tableId Int 课程表id
      */
     private fun loadCourseTable(tableId: Int) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        courseView.startOfWeek = sharedPreferences.getString("start_of_week", "1")?.toInt() ?: 1
+        courseView.courseHeight =
+            (sharedPreferences.getString("course_height", "64")?.toInt() ?: 64) *
+                    resources.displayMetrics.density
+        courseView.showEndTime = sharedPreferences.getBoolean("show_end_time", false)
+        courseView.showTimeIndex = sharedPreferences.getBoolean("show_time_index", true)
+        courseView.showCourseBorder = sharedPreferences.getBoolean("show_course_border", false)
+
         courseView.weekText = resources.getStringArray(R.array.week_title_content)
         courseView.initWeekTitle()
         var courseTable = LitePal.find<CourseTable>(tableId.toLong())
@@ -165,6 +205,45 @@ class MainActivity : AppCompatActivity() {
         courseTableNameText.text = courseTable?.name
         emptyLayout.activeViewId = if (courseTable == null) 0 else 1
         selectedTableId =  courseTable?.id ?: 0
+    }
+
+    /**
+     * 将当前课表保存为图片
+     * @return File? 保存后的文件
+     */
+    private fun saveCourseTableAsPicture(): File? {
+        val sharedTableView = SharedTableView(this)
+        sharedTableView.courseTableId = selectedTableId
+        val bitmap = sharedTableView.getBitmap()
+        if (FileUtils.createOrExistsDir(getExternalFilesDir(Environment.DIRECTORY_PICTURES))) {
+            try {
+                val fileName = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
+                    .format(Date(System.currentTimeMillis())) + ".jpg"
+                val file = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
+                Log.d(TAG, "file path: ${file.path}")
+                val fileOutputStream = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+                fileOutputStream.flush()
+                sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_STARTED,
+                    Uri.fromFile(File(file.path))))
+
+                return file
+            } catch (exception: Exception) {
+                Log.e(TAG, "", exception)
+            }
+        }
+        return null
+    }
+
+    /**
+     * 分享当前课程表
+     */
+    private fun shareCourseTable() {
+        val file = saveCourseTableAsPicture()
+        if (file != null) {
+            val intent = IntentUtils.getShareImageIntent("", file.path)
+            startActivity(Intent.createChooser(intent, "分享"))
+        }
     }
 
     /**
@@ -204,17 +283,20 @@ class MainActivity : AppCompatActivity() {
                                      classItemView: ClassItemView?,
                                      course: Course?,
                                      courseTime: CourseTime?,
-                                     weekday: Int) -> Unit) = {
+                                     weekday: Int,
+                                     longClick: Boolean) -> Unit) = {
             hasClass: Boolean,
             classItemView: ClassItemView?,
             course: Course?,
             courseTime: CourseTime?,
-            weekday: Int ->
+            weekday: Int,
+            longClick: Boolean ->
         if (editMode) {
             if (hasClass) {
                 if (selectedCourse == null) {
                     selectedCourse = course
                     classItemView?.checked = true
+                    courseLongClick = longClick
                 } else {
                     selectedCourse?.switch(course!!)
                     selectedCourse?.save()
@@ -229,9 +311,17 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    selectedCourse?.startTime = courseTime?.startTime
-                    selectedCourse?.weekDay = weekday
-                    selectedCourse?.save()
+                    if (courseLongClick) {
+                        val newCourse = selectedCourse?.copy(selectedCourse?.tableId!!)
+                        newCourse?.startTime = courseTime?.startTime
+                        newCourse?.weekDay = weekday
+                        newCourse?.save()
+                        courseView.courseList.add(newCourse!!)
+                    } else {
+                        selectedCourse?.startTime = courseTime?.startTime
+                        selectedCourse?.weekDay = weekday
+                        selectedCourse?.save()
+                    }
                     courseView.notifyClassChanged()
                     selectedCourse = null
                 }

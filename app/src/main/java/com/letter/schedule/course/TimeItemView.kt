@@ -43,6 +43,12 @@ constructor(context: Context,
         endTimeText.visibility = if (value) View.VISIBLE else View.GONE
     }
 
+    var showIndex: Boolean = true
+    set(value) {
+        field = value
+        orderText.visibility = if (value) View.VISIBLE else View.GONE
+    }
+
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_course_time_item, this)
     }

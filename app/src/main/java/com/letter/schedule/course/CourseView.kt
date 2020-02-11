@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -67,6 +68,16 @@ class CourseView @JvmOverloads
     var showEndTime = true
 
     /**
+     * 显示课时序号
+     */
+    var showTimeIndex = true
+
+    /**
+     * 显示课程边框
+     */
+    var showCourseBorder = false
+
+    /**
      * 滚动视图
      */
     private var scrollView : NestedScrollView
@@ -108,7 +119,8 @@ class CourseView @JvmOverloads
                            classItemView: ClassItemView?,
                            course: Course?,
                            courseTime: CourseTime?,
-                           weekday: Int) -> Unit) ?= null
+                           weekday: Int,
+                           longClick: Boolean) -> Unit) ?= null
 
     /**
      * 课程时间List
@@ -151,6 +163,7 @@ class CourseView @JvmOverloads
             context.resources.displayMetrics.density * DEFAULT_COURSE_TIME_TITLE_WIDTH_DP)
         startOfWeek = attrArray.getInt(R.styleable.CourseView_startOfWeek, WEEK_MONDAY)
         showEndTime = attrArray.getBoolean(R.styleable.CourseView_showEndTime, true)
+        showTimeIndex = attrArray.getBoolean(R.styleable.CourseView_showTimeIndex, true)
 
         attrArray.recycle()
 
@@ -160,10 +173,10 @@ class CourseView @JvmOverloads
         weekLayout = LinearLayout(context)
         timeLayout = LinearLayout(context)
 
-        this.post {
+//        this.post {
             initLayout()
             initWeekTitle()
-        }
+//        }
     }
 
     /**
@@ -247,7 +260,6 @@ class CourseView @JvmOverloads
         classLayoutParams.leftMargin = courseTimeTitleWidth.toInt()
         classLayoutParams.topMargin = 0
         classLayout.layoutParams = classLayoutParams
-        classLayout.onClickListener = onEmptyClassViewClicked
         mainLayout.addView(classLayout)
     }
 
@@ -285,6 +297,7 @@ class CourseView @JvmOverloads
             timeItemView.courseTime = value
             timeItemView.courseIndex = index++
             timeItemView.showEndTime = showEndTime
+            timeItemView.showIndex = showTimeIndex
             timeLayout.addView(timeItemView)
         }
     }
@@ -294,7 +307,18 @@ class CourseView @JvmOverloads
      */
     private fun initClass() {
         classLayout.removeAllViews()
+        classLayout.layoutParams.width = (widthMeasured - courseTimeTitleWidth).toInt()
         classLayout.layoutParams.height = (courseTimeList.size * courseHeight).toInt()
+        classLayout.onClickListener = onEmptyClassViewClicked
+        classLayout.background =
+            if (showCourseBorder)
+                CourseBackgroundDrawable(
+                    classLayout.layoutParams.width,
+                    classLayout.layoutParams.height,
+                    courseTimeList.size,
+                    context.getColor(R.color.colorSplitLine))
+            else null
+
         val courseWidth = ((widthMeasured - courseTimeTitleWidth) / 7).toInt()
         for (course in courseList) {
             for (i in 0 until courseTimeList.size) {
@@ -308,7 +332,11 @@ class CourseView @JvmOverloads
                     classItemView.layoutParams = layoutParams
                     classItemView.course = course
                     classItemView.mainLayout.setOnClickListener {
-                        onClassItemClicked(course, classItemView)
+                        onClassItemClicked(course, classItemView, false)
+                    }
+                    classItemView.mainLayout.setOnLongClickListener {
+                        onClassItemClicked(course, classItemView, true)
+                        true
                     }
                     modifyClassBackground(classItemView, course.color)
                     classLayout.addView(classItemView)
@@ -353,19 +381,21 @@ class CourseView @JvmOverloads
             null,
             null,
             courseTimeList[column.toInt()],
-            (startOfWeek + row) % 7)
+            (startOfWeek + row) % 7,
+            false)
     }
 
     /**
      * 课程表点击事件处理
      */
-    private val onClassItemClicked: ((course: Course, view: ClassItemView) -> Unit) = {
-        course: Course, view: ClassItemView ->
+    private val onClassItemClicked: ((course: Course, view: ClassItemView, longClick: Boolean) -> Unit) = {
+        course: Course, view: ClassItemView, longClick ->
         onClickListener?.invoke(true,
             view,
             course,
             null,
-            0)
+            0,
+            longClick)
     }
 
     /**

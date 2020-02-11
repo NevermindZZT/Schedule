@@ -7,6 +7,11 @@ import android.view.View
 import com.letter.schedule.R
 import kotlinx.android.synthetic.main.activity_setting.*
 
+/**
+ * 设置活动
+ * @author Letter(nevermindzzt@gmail.com)
+ * @since 1.0.0
+ */
 class SettingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

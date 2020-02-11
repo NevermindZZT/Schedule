@@ -8,6 +8,12 @@ import android.widget.NumberPicker
 import com.letter.schedule.R
 import kotlinx.android.synthetic.main.dialog_course_time.*
 
+/**
+ * 课程表时间设置对话框
+ * @property onButtonClickListener Function4<[@kotlin.ParameterName] Dialog, [@kotlin.ParameterName] Int, [@kotlin.ParameterName] String?, [@kotlin.ParameterName] String?, Unit>?
+ *           按钮点击处理监听
+ * @constructor 构建一个对话框
+ */
 class CourseTimeDialog
     @JvmOverloads
     constructor(context: Context, theme: Int = 0)
@@ -33,6 +39,9 @@ class CourseTimeDialog
         initPicker()
     }
 
+    /**
+     * 初始化NumberPicker
+     */
     private fun initPicker() {
         val hoursList = mutableListOf<String>()
         for (i in 0..23) {
@@ -72,6 +81,9 @@ class CourseTimeDialog
         endTimeMinute.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
     }
 
+    /**
+     * 设置按钮
+     */
     private fun setButton() {
         positiveButton.setOnClickListener {
             val startTime = String.format("%d:%02d", startTimeHour.value, startTimeMinute.value)
@@ -83,6 +95,11 @@ class CourseTimeDialog
         }
     }
 
+    /**
+     * 设置时间
+     * @param startTime String? 开始时间
+     * @param endTime String? 结束时间
+     */
     fun setTime(startTime: String?, endTime: String?) {
         val startValues = startTime?.split(":")
         if (startValues?.size == 2) {
@@ -101,6 +118,10 @@ class CourseTimeDialog
         }
     }
 
+    /**
+     * 显示对话框
+     * @param init [@kotlin.ExtensionFunctionType] Function1<CourseTimeDialog, Unit>? 初始化参数
+     */
     fun show(init: (CourseTimeDialog.() -> Unit) ?= null) {
         if (init != null) {
             this.init()

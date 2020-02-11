@@ -106,6 +106,7 @@
                         android:text="@string/course_table_edit_activity_list_title"
                         android:textColor="@color/textColorPrimary"
                         android:textSize="24sp"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

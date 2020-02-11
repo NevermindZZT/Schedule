@@ -1,8 +1,17 @@
 package com.letter.schedule.course
 
-import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
+import java.io.File
 
+/**
+ * 课程表
+ * @property id Int id
+ * @property name String? 课程表名字
+ * @property isDefault Int 是否为默认课程表
+ * @constructor 构建一个课程表
+ * @author Letter(nevermindzzt@gmail.com)
+ * @since 1.0.0
+ */
 class CourseTable
     constructor(var id : Int = 0,
                 var name : String ?= null,
@@ -13,33 +22,7 @@ class CourseTable
         const val DEFAULT_TRUE = 1
     }
 
-    @Column(ignore = true)
-    var courseList: MutableList<Course> ?= null
+    fun toExcel(file: File) {
 
-    @Column(ignore = true)
-    var courseTimeList: MutableList<CourseTime> ?= null
-
-    fun addCourse(course: Course) {
-        courseList?.add(course)
-    }
-
-    fun removeCourse(course: Course) {
-        courseList?.remove(course)
-    }
-
-    fun removeCourse(index: Int) {
-        courseList?.removeAt(index)
-    }
-
-    fun addTime(courseTime: CourseTime) {
-        courseTimeList?.add(courseTime)
-    }
-
-    fun removeTime(courseTime: CourseTime) {
-        courseTimeList?.remove(courseTime)
-    }
-
-    fun removeTime(index: Int) {
-        courseTimeList?.removeAt(index)
     }
 }

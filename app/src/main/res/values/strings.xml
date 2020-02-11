@@ -6,12 +6,18 @@
     <string name="main_activity_navigation_menu_about">关于</string>
     <string name="main_activity_toolbar_menu_table_edit">编辑课表</string>
     <string name="main_activity_toolbar_menu_edit_mode">课程调整</string>
+    <string name="main_activity_toolbar_menu_save_picture">保存为图片</string>
+    <string name="main_activity_toolbar_menu_share">以图片形式分享</string>
     <string name="main_activity_toolbar_menu_edit_complete">完成调整</string>
     <string name="main_activity_title_edit_mode">编辑模式</string>
     <string name="main_activity_add_table_button">添加课程表</string>
+    <string name="main_activity_toast_save_picture_success">保存为图片成功</string>
+    <string name="main_activity_toast_save_picture_fail">保存为图片失败</string>
     <string name="main_activity_toast_please_select_class">请选择有效课程</string>
     <string name="main_activity_toast_course_table_invalid">当前课程表无效</string>
     <string name="main_activity_toast_please_exit_edit_mode">请先退出课程调整模式再进行操作</string>
+
+    <string name="course_table_list_activity_title">课程表</string>
 
     <string name="course_table_create_activity_title">创建课表</string>
     <string name="course_table_create_activity_new_title">新建空课表</string>
@@ -62,5 +68,9 @@
     <string name="setting_course_height_summary">设置课程表中，每个课时课程的高度</string>
     <string name="setting_show_end_time_title">显示课时结束时间</string>
     <string name="setting_show_end_time_summary">在课程表的课时上，显示该课时结束的时间</string>
+    <string name="setting_show_time_index_title">显示课时序号</string>
+    <string name="setting_show_time_index_summary">在课程表的课时上，显示该课时的序号</string>
+    <string name="setting_show_course_border_title">显示课程边框</string>
+    <string name="setting_show_course_border_summary">在课程表中，显示课程的边框</string>
 
 </resources>

@@ -18,11 +18,6 @@ class ClassItemView @JvmOverloads
 constructor(context: Context, attrs: AttributeSet?=null, defStyleAttr: Int=0):
     CardView(context, attrs, defStyleAttr) {
 
-    init {
-        radius = context.resources.displayMetrics.density * 8
-        elevation = 0f
-    }
-
     /**
      * 课程
      */
@@ -60,6 +55,8 @@ constructor(context: Context, attrs: AttributeSet?=null, defStyleAttr: Int=0):
     }
 
     init {
+        radius = context.resources.displayMetrics.density * 8
+        elevation = 0f
         LayoutInflater.from(context).inflate(R.layout.layout_course_class_item, this)
     }
 }
