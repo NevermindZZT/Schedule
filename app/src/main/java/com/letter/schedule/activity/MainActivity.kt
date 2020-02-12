@@ -3,9 +3,11 @@ package com.letter.schedule.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
@@ -48,6 +50,8 @@ class MainActivity : AppCompatActivity() {
     private var selectedTable: CourseTable ?= null
 
     private var selectedCourse: Course ?= null
+    private var selectedClassItemView: ClassItemView ?= null
+    private var selected: Boolean = false
 
     private var courseLongClick: Boolean = false
 
@@ -156,6 +160,33 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     shareCourseTableAsExcel()
                 }
+            }
+            R.id.popup_copy -> {
+                selected = true
+                selectedClassItemView?.checked = true
+                Toast.makeText(this, R.string.main_activity_toast_course_copy, Toast.LENGTH_SHORT)
+                    .show()
+            }
+            R.id.popup_delete -> {
+                val dialog = AlertDialog.Builder(this, R.style.DialogTheme)
+                    .setMessage("${getString(R.string.main_activity_delete_dialog_message)} ${selectedCourse?.name}?")
+                    .setPositiveButton(R.string.main_activity_delete_positive_button,
+                        {
+                                dialogInterface, i ->
+                            dialogInterface.dismiss()
+                            courseView.courseList.remove(selectedCourse)
+                            selectedCourse?.delete()
+                            Toast.makeText(this, R.string.main_activity_toast_delete_complete, Toast.LENGTH_SHORT)
+                                .show()
+                            courseView.notifyClassChanged()
+                        })
+                    .setNegativeButton(R.string.main_activity_delete_negative_button,
+                        {
+                                dialogInterface, i ->
+                            dialogInterface.dismiss()
+                        })
+                    .create()
+                dialog.show()
             }
         }
         return true
@@ -292,19 +323,32 @@ class MainActivity : AppCompatActivity() {
             longClick: Boolean ->
         if (editMode) {
             if (hasClass) {
-                if (selectedCourse == null) {
+                Log.d(TAG, "selected $selected")
+                if (!selected) {
                     selectedCourse = course
-                    classItemView?.checked = true
+                    selectedClassItemView = classItemView
                     courseLongClick = longClick
+                    if (longClick) {
+                        val popupMenu = PopupMenu(this, classItemView)
+                        popupMenu.menuInflater.inflate(R.menu.menu_course_popup, popupMenu.menu)
+                        popupMenu.setOnMenuItemClickListener {
+                            onOptionsItemSelected(it)
+                        }
+                        popupMenu.show()
+                    } else {
+                        classItemView?.checked = true
+                        selected = true
+                    }
                 } else {
                     selectedCourse?.switch(course!!)
                     selectedCourse?.save()
                     course?.save()
                     courseView.notifyClassChanged()
                     selectedCourse = null
+                    selected = false
                 }
             } else {
-                if (selectedCourse == null) {
+                if (!selected) {
                     Toast.makeText(this,
                         R.string.main_activity_toast_please_select_class,
                         Toast.LENGTH_SHORT)
@@ -323,6 +367,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     courseView.notifyClassChanged()
                     selectedCourse = null
+                    selected = false
                 }
             }
         } else {
@@ -337,6 +382,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 startActivity(intent)
             }
+            selected = false
         }
     }
 }

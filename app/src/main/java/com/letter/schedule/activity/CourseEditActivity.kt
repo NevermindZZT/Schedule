@@ -89,6 +89,7 @@ class CourseEditActivity : AppCompatActivity() {
                     course.save()
                     Toast.makeText(this, R.string.course_edit_activity_toast_save_complete, Toast.LENGTH_SHORT)
                         .show()
+                    finish()
                 }
             }
         }
