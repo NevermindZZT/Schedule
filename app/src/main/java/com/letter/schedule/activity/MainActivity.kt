@@ -1,12 +1,8 @@
 package com.letter.schedule.activity
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,21 +10,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.preference.PreferenceManager
-import com.blankj.utilcode.util.ConvertUtils
-import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.IntentUtils
+import com.blankj.utilcode.util.UriUtils
 import com.letter.schedule.R
 import com.letter.schedule.course.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_shared_table.view.*
 import org.litepal.LitePal
 import org.litepal.extension.find
 import org.litepal.extension.findAll
-import java.io.File
-import java.io.FileOutputStream
-import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * 应用主活动
@@ -46,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     set(value) {
         field = value
         courseTableNameText.text = if (value) getString(R.string.main_activity_toolbar_menu_edit_mode)
-            else LitePal.find<CourseTable>(selectedTableId.toLong())?.name ?: ""
+            else selectedTable?.name
         toolbar.menu.getItem(1).title =
             if (value) getString(R.string.main_activity_toolbar_menu_edit_complete)
             else getString(R.string.main_activity_toolbar_menu_edit_mode)
@@ -55,7 +44,8 @@ class MainActivity : AppCompatActivity() {
             else R.drawable.ic_toolbar_order)
     }
 
-    private var selectedTableId: Int = 0
+//    private var selectedTableId: Int = 0
+    private var selectedTable: CourseTable ?= null
 
     private var selectedCourse: Course ?= null
 
@@ -82,13 +72,13 @@ class MainActivity : AppCompatActivity() {
 
         courseView.onClickListener = onCourseViewClick
 
-        selectedTableId = getDefaultTableId()
+        selectedTable = getDefaultTable()
     }
 
     override fun onResume() {
         super.onResume()
         courseView.post {
-            loadCourseTable(selectedTableId)
+            loadCourseTable(selectedTable)
         }
     }
 
@@ -111,17 +101,17 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
             R.id.toolbar_table_edit -> {
-                if (selectedTableId == 0) {
+                if (selectedTable == null) {
                     Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
                         .show()
                 } else {
                     val intent = Intent(this, CourseTableEditActivity::class.java)
-                    intent.putExtra("table_id", selectedTableId)
+                    intent.putExtra("table_id", selectedTable?.id ?: 0)
                     startActivity(intent)
                 }
             }
             R.id.toolbar_edit -> {
-                if (selectedTableId == 0) {
+                if (selectedTable == null) {
                     Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
                         .show()
                 } else {
@@ -129,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             R.id.toolbar_save_picture -> {
-                val file = saveCourseTableAsPicture()
+                val file = selectedTable?.saveAsPicture(this)
                 Toast.makeText(this,
                     if (file != null) R.string.main_activity_toast_save_picture_success
                     else R.string.main_activity_toast_save_picture_fail,
@@ -137,11 +127,34 @@ class MainActivity : AppCompatActivity() {
                     .show()
             }
             R.id.toolbar_share -> {
-                if (selectedTableId == 0) {
+                if (selectedTable == null) {
                     Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
                         .show()
                 } else {
                     shareCourseTable()
+                }
+            }
+            R.id.toolbar_export_excel -> {
+                if (selectedTable == null) {
+                    Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    val file = selectedTable?.saveAsExcel(this)
+                    Toast.makeText(
+                        this,
+                        if (file != null) R.string.main_activity_toast_export_excel_success
+                        else R.string.main_activity_toast_export_excel_fail,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            }
+            R.id.toolbar_share_excel -> {
+                if (selectedTable == null) {
+                    Toast.makeText(this, R.string.main_activity_toast_course_table_invalid, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    shareCourseTableAsExcel()
                 }
             }
         }
@@ -162,20 +175,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 获取默认课表的id
-     * @return Int 默认课表id
+     * 获取默认课表的
+     * @return Int 默认课表
      */
-    private fun getDefaultTableId() : Int {
+    private fun getDefaultTable() : CourseTable? {
         val courseTableList = LitePal.where("isDefault like ?", "1")
             .find<CourseTable>()
-        return if (courseTableList.isNotEmpty()) courseTableList[0].id else 0
+        return if (courseTableList.isNotEmpty()) courseTableList[0] else null
     }
 
     /**
      * 加载课程表
-     * @param tableId Int 课程表id
+     * @param table CourseTable 课程表
      */
-    private fun loadCourseTable(tableId: Int) {
+    private fun loadCourseTable(table: CourseTable?) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         courseView.startOfWeek = sharedPreferences.getString("start_of_week", "1")?.toInt() ?: 1
         courseView.courseHeight =
@@ -184,10 +197,11 @@ class MainActivity : AppCompatActivity() {
         courseView.showEndTime = sharedPreferences.getBoolean("show_end_time", false)
         courseView.showTimeIndex = sharedPreferences.getBoolean("show_time_index", true)
         courseView.showCourseBorder = sharedPreferences.getBoolean("show_course_border", false)
+        courseView.courseTextSize = sharedPreferences.getString("course_text_size", "14")?.toFloat() ?: 14f
 
         courseView.weekText = resources.getStringArray(R.array.week_title_content)
         courseView.initWeekTitle()
-        var courseTable = LitePal.find<CourseTable>(tableId.toLong())
+        var courseTable = table
         if (courseTable == null) {
             val courseTableList = LitePal.findAll<CourseTable>()
             if (courseTableList.isNotEmpty()) {
@@ -204,44 +218,29 @@ class MainActivity : AppCompatActivity() {
         }
         courseTableNameText.text = courseTable?.name
         emptyLayout.activeViewId = if (courseTable == null) 0 else 1
-        selectedTableId =  courseTable?.id ?: 0
-    }
-
-    /**
-     * 将当前课表保存为图片
-     * @return File? 保存后的文件
-     */
-    private fun saveCourseTableAsPicture(): File? {
-        val sharedTableView = SharedTableView(this)
-        sharedTableView.courseTableId = selectedTableId
-        val bitmap = sharedTableView.getBitmap()
-        if (FileUtils.createOrExistsDir(getExternalFilesDir(Environment.DIRECTORY_PICTURES))) {
-            try {
-                val fileName = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
-                    .format(Date(System.currentTimeMillis())) + ".jpg"
-                val file = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
-                Log.d(TAG, "file path: ${file.path}")
-                val fileOutputStream = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-                fileOutputStream.flush()
-                sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_STARTED,
-                    Uri.fromFile(File(file.path))))
-
-                return file
-            } catch (exception: Exception) {
-                Log.e(TAG, "", exception)
-            }
-        }
-        return null
+        selectedTable =  courseTable
     }
 
     /**
      * 分享当前课程表
      */
     private fun shareCourseTable() {
-        val file = saveCourseTableAsPicture()
+        val file = selectedTable?.saveAsPicture(this)
         if (file != null) {
             val intent = IntentUtils.getShareImageIntent("", file.path)
+            startActivity(Intent.createChooser(intent, "分享"))
+        }
+    }
+
+    /**
+     * 以Excel形式分享当前课表
+     */
+    private fun shareCourseTableAsExcel() {
+        val file = selectedTable?.saveAsExcel(this)
+        if (file != null) {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(Intent.EXTRA_STREAM, UriUtils.file2Uri(file))
+            intent.type = "*/*"
             startActivity(Intent.createChooser(intent, "分享"))
         }
     }
@@ -262,7 +261,7 @@ class MainActivity : AppCompatActivity() {
                         val builder = AlertDialog.Builder(this, R.style.DialogTheme)
                             .setItems(nameList.toTypedArray(),
                                 {dialog, which ->
-                                    loadCourseTable(courseTableList[which].id)
+                                    loadCourseTable(courseTableList[which])
                                     dialog.dismiss()
                                 })
                         builder.create().show()
@@ -328,14 +327,16 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             val intent = Intent(this, CourseEditActivity::class.java)
-            intent.putExtra("table_id", selectedTableId)
-            if (hasClass) {
-                intent.putExtra("course_id", course?.id)
-            } else {
-                intent.putExtra("course_time_id", courseTime?.id)
-                intent.putExtra("week", weekday)
+            intent.putExtra("table_id", selectedTable?.id ?: 0)
+            if (!longClick) {
+                if (hasClass) {
+                    intent.putExtra("course_id", course?.id)
+                } else {
+                    intent.putExtra("course_time_id", courseTime?.id)
+                    intent.putExtra("week", weekday)
+                }
+                startActivity(intent)
             }
-            startActivity(intent)
         }
     }
 }

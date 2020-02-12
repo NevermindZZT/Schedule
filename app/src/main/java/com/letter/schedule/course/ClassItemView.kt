@@ -54,6 +54,18 @@ constructor(context: Context, attrs: AttributeSet?=null, defStyleAttr: Int=0):
         checkImage.visibility = if (value) View.VISIBLE else View.GONE
     }
 
+    /**
+     * 字体大小
+     */
+    var textSize : Float
+    get() {
+        return nameText.textSize
+    }
+    set(value) {
+        nameText.textSize = value
+        extraText.textSize = value
+    }
+
     init {
         radius = context.resources.displayMetrics.density * 8
         elevation = 0f

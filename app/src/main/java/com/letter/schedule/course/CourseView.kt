@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -76,6 +75,11 @@ class CourseView @JvmOverloads
      * 显示课程边框
      */
     var showCourseBorder = false
+
+    /**
+     * 课程文字大小
+     */
+    var courseTextSize = 14f
 
     /**
      * 滚动视图
@@ -331,6 +335,7 @@ class CourseView @JvmOverloads
                     val classItemView = ClassItemView(context)
                     classItemView.layoutParams = layoutParams
                     classItemView.course = course
+                    classItemView.textSize = courseTextSize
                     classItemView.mainLayout.setOnClickListener {
                         onClassItemClicked(course, classItemView, false)
                     }

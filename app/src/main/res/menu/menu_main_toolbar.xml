@@ -16,10 +16,21 @@
             android:id="@+id/toolbar_save_picture"
             android:title="@string/main_activity_toolbar_menu_save_picture"
             app:showAsAction="never" />
+
         <item
             android:id="@+id/toolbar_share"
             android:icon="@drawable/ic_toolbar_share"
             android:title="@string/main_activity_toolbar_menu_share"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/toolbar_export_excel"
+            android:title="@string/main_activity_toolbar_menu_export_excel"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/toolbar_share_excel"
+            android:title="@string/main_activity_toolbar_menu_share_excel"
             app:showAsAction="never" />
     </group>
 </menu>

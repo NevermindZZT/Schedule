@@ -55,6 +55,7 @@ constructor(context: Context, attrs: AttributeSet?=null, defStyleAttr: Int=0):
         courseView.showEndTime = sharedPreferences.getBoolean("show_end_time", false)
         courseView.showTimeIndex = sharedPreferences.getBoolean("show_time_index", true)
         courseView.showCourseBorder = sharedPreferences.getBoolean("show_course_border", false)
+        courseView.courseTextSize = sharedPreferences.getString("course_text_size", "14")?.toFloat() ?: 14f
 
         courseView.weekText = resources.getStringArray(R.array.week_title_content)
         courseView.initWeekTitle()

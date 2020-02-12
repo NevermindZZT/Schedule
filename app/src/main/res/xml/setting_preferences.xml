@@ -15,6 +15,13 @@
         android:entries="@array/setting_course_height_entries"
         android:entryValues="@array/setting_course_height_values" />
 
+    <ListPreference
+        android:entries="@array/setting_course_text_size_entries"
+        android:entryValues="@array/setting_course_text_size_values"
+        android:key="course_text_size"
+        android:summary="@string/setting_course_text_size_summary"
+        android:title="@string/setting_course_text_size_title" />
+
     <SwitchPreference
         android:key="show_end_time"
         android:title="@string/setting_show_end_time_title"

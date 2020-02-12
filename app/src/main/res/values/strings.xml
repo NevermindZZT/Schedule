@@ -8,11 +8,15 @@
     <string name="main_activity_toolbar_menu_edit_mode">课程调整</string>
     <string name="main_activity_toolbar_menu_save_picture">保存为图片</string>
     <string name="main_activity_toolbar_menu_share">以图片形式分享</string>
+    <string name="main_activity_toolbar_menu_export_excel">导出为excel</string>
+    <string name="main_activity_toolbar_menu_share_excel">以Excel形式分享</string>
     <string name="main_activity_toolbar_menu_edit_complete">完成调整</string>
     <string name="main_activity_title_edit_mode">编辑模式</string>
     <string name="main_activity_add_table_button">添加课程表</string>
     <string name="main_activity_toast_save_picture_success">保存为图片成功</string>
     <string name="main_activity_toast_save_picture_fail">保存为图片失败</string>
+    <string name="main_activity_toast_export_excel_success">导出Excel成功</string>
+    <string name="main_activity_toast_export_excel_fail">导出Excel失败</string>
     <string name="main_activity_toast_please_select_class">请选择有效课程</string>
     <string name="main_activity_toast_course_table_invalid">当前课程表无效</string>
     <string name="main_activity_toast_please_exit_edit_mode">请先退出课程调整模式再进行操作</string>
@@ -66,6 +70,8 @@
     <string name="setting_start_of_week_summary">选择每周开始的日子</string>
     <string name="setting_course_height_title">课程高度</string>
     <string name="setting_course_height_summary">设置课程表中，每个课时课程的高度</string>
+    <string name="setting_course_text_size_title">课程文字大小</string>
+    <string name="setting_course_text_size_summary">设置课程中文本文字的大小</string>
     <string name="setting_show_end_time_title">显示课时结束时间</string>
     <string name="setting_show_end_time_summary">在课程表的课时上，显示该课时结束的时间</string>
     <string name="setting_show_time_index_title">显示课时序号</string>

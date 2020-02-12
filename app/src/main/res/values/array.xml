@@ -59,4 +59,18 @@
         <item>96</item>
         <item>128</item>
     </string-array>
+    <string-array name="setting_course_text_size_entries">
+        <item>超小</item>
+        <item>小</item>
+        <item>一般</item>
+        <item>大</item>
+        <item>超大</item>
+    </string-array>
+    <string-array name="setting_course_text_size_values">
+        <item>10</item>
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+    </string-array>
 </resources>
