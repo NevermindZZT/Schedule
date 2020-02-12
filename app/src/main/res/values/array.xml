@@ -46,6 +46,7 @@
         <item>6</item>
     </string-array>
     <string-array name="setting_course_height_entries">
+        <item>极小</item>
         <item>超小</item>
         <item>小</item>
         <item>一般</item>
@@ -53,6 +54,7 @@
         <item>超大</item>
     </string-array>
     <string-array name="setting_course_height_values">
+        <item>24</item>
         <item>32</item>
         <item>48</item>
         <item>64</item>

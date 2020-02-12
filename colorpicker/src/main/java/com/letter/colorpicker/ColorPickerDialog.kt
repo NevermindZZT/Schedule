@@ -118,6 +118,9 @@ constructor(context: Context, theme: Int = 0, init: (ColorPickerDialog.() -> Uni
                     + (stepG * (level - i - 1)).shl(8)
                     + (stepB * (level - i - 1)))
         }
+        if (color.and(0x00FFFFFF) == 0x00FFFFFF) {
+            colors[0] = 0
+        }
         colorPickerSub.setColors(colors.toList() as ArrayList<Int>)
     }
 

@@ -328,8 +328,8 @@ class CourseView @JvmOverloads
             for (i in 0 until courseTimeList.size) {
                 if (course.startTime == courseTimeList[i].startTime) {
                     val layoutParams = LayoutParams(
-                        courseWidth,
-                        (course.length * courseHeight).toInt())
+                        courseWidth - 1,
+                        (course.length * courseHeight).toInt() - 1)
                     layoutParams.topMargin = (i * courseHeight).toInt()
                     layoutParams.leftMargin = ((course.weekDay - startOfWeek + 7) % 7) * courseWidth
                     val classItemView = ClassItemView(context)
@@ -369,7 +369,7 @@ class CourseView @JvmOverloads
             Color.DKGRAY)
         val colorStateList = ColorStateList(stateList, stateColorList)
 
-        val colorDrawable = ColorDrawable(color)
+        val colorDrawable = ColorDrawable(if (color == 0) 0xFFF5F6FA.toInt() else color)
 
         val rippleDrawable = RippleDrawable(colorStateList, colorDrawable, null)
         classItemView.mainLayout.background = rippleDrawable
