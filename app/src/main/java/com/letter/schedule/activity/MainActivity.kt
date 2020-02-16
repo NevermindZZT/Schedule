@@ -44,9 +44,9 @@ class MainActivity : AppCompatActivity() {
         toolbar.menu.getItem(1).setIcon(
             if (value) R.drawable.ic_toolbar_complete
             else R.drawable.ic_toolbar_order)
+        selectedClassItemView?.checked = false
     }
 
-//    private var selectedTableId: Int = 0
     private var selectedTable: CourseTable ?= null
 
     private var selectedCourse: Course ?= null
@@ -129,6 +129,12 @@ class MainActivity : AppCompatActivity() {
                     else R.string.main_activity_toast_save_picture_fail,
                     Toast.LENGTH_SHORT)
                     .show()
+//                val uri = selectedTable?.saveAsPictureToAlbum(this)
+//                Toast.makeText(this,
+//                    if (uri != null) R.string.main_activity_toast_save_picture_success
+//                    else R.string.main_activity_toast_save_picture_fail,
+//                    Toast.LENGTH_SHORT)
+//                    .show()
             }
             R.id.toolbar_share -> {
                 if (selectedTable == null) {

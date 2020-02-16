@@ -1,17 +1,19 @@
 package com.letter.schedule.course
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import com.blankj.utilcode.util.FileUtils
 import com.letter.schedule.R
 import jxl.Workbook
 import jxl.write.Label
 import jxl.write.WritableCellFormat
 import jxl.write.WritableFont
-import jxl.write.WritableWorkbook
 import org.litepal.LitePal
 import org.litepal.crud.LitePalSupport
 import org.litepal.extension.find
@@ -95,22 +97,26 @@ class CourseTable
         return null
     }
 
+    private fun toBitmap(context: Context): Bitmap? {
+        val sharedTableView = SharedTableView(context)
+        sharedTableView.courseTableId = id
+        return sharedTableView.getBitmap()
+    }
+
     /**
      * 保存为图片
      * @param context Context context
      * @return File? 保存后的文件
      */
     fun saveAsPicture(context: Context): File? {
-        val sharedTableView = SharedTableView(context)
-        sharedTableView.courseTableId = id
-        val bitmap = sharedTableView.getBitmap()
+        val bitmap = toBitmap(context)
         if (FileUtils.createOrExistsDir(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES))) {
             try {
                 val fileName = "$name-${SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
                     .format(Date(System.currentTimeMillis()))}.jpg"
                 val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
                 val fileOutputStream = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
                 fileOutputStream.flush()
                 context.sendBroadcast(
                     Intent(Intent.ACTION_MEDIA_SCANNER_STARTED,
@@ -120,6 +126,35 @@ class CourseTable
                 return file
             } catch (exception: Exception) {
             }
+        }
+        return null
+    }
+
+    fun saveAsPictureToAlbum(context: Context): Uri? {
+        val fileName = "$name-${SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
+            .format(Date(System.currentTimeMillis()))}.jpg"
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+            put(MediaStore.Images.Media.TITLE, fileName)
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Schedule")
+//            } else {
+//                put(MediaStore.Images.Media.DATA, "Pictures/Schedule")
+//            }
+            put(MediaStore.Images.Media.MIME_TYPE, "image/JPEG")
+        }
+        val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        if (uri != null) {
+            try {
+                val outputStream = context.contentResolver.openOutputStream(uri)
+                val bitmap = toBitmap(context)
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                outputStream?.flush()
+                outputStream?.close()
+            } catch (exception: Exception) {
+
+            }
+            return uri
         }
         return null
     }
