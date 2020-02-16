@@ -23,16 +23,16 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('F:\\AndroidStudio\\letter_key.jks')
-            storePassword 'zh961008'
-            keyAlias = 'letterkey'
-            keyPassword 'zh961008'
+            storeFile file(KEY_PATH)
+            storePassword KEY_PASSWORD
+            keyAlias = KEY_ALIAS
+            keyPassword ALIAS_PASSWORD
         }
         debug {
-            storeFile file('F:\\AndroidStudio\\letter_key.jks')
-            storePassword 'zh961008'
-            keyAlias = 'letterkey'
-            keyPassword 'zh961008'
+            storeFile file(KEY_PATH)
+            storePassword KEY_PASSWORD
+            keyAlias = KEY_ALIAS
+            keyPassword ALIAS_PASSWORD
         }
     }
 }
