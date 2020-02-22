@@ -125,8 +125,8 @@ class MainActivity : AppCompatActivity() {
             R.id.toolbar_save_picture -> {
                 val file = selectedTable?.saveAsPicture(this)
                 Toast.makeText(this,
-                    if (file != null) R.string.main_activity_toast_save_picture_success
-                    else R.string.main_activity_toast_save_picture_fail,
+                    if (file != null) "${getString(R.string.main_activity_toast_save_picture_path)}${file.path}"
+                    else getString(R.string.main_activity_toast_save_picture_fail),
                     Toast.LENGTH_SHORT)
                     .show()
 //                val uri = selectedTable?.saveAsPictureToAlbum(this)
@@ -152,8 +152,8 @@ class MainActivity : AppCompatActivity() {
                     val file = selectedTable?.saveAsExcel(this)
                     Toast.makeText(
                         this,
-                        if (file != null) R.string.main_activity_toast_export_excel_success
-                        else R.string.main_activity_toast_export_excel_fail,
+                        if (file != null) "${getString(R.string.main_activity_toast_export_excel_path)}${file.path}"
+                        else getString(R.string.main_activity_toast_export_excel_fail),
                         Toast.LENGTH_SHORT
                     )
                         .show()

@@ -1,5 +1,7 @@
 package com.letter.schedule.activity
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -27,6 +29,12 @@ class AboutActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.about_activity_title)
 
         versionText.text = BuildConfig.VERSION_NAME
+
+        openSourceText.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(getString(R.string.about_activity_open_source_address))
+            startActivity(intent)
+        }
     }
 
     /**

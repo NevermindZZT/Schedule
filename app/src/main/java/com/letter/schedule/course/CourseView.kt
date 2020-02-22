@@ -279,6 +279,9 @@ class CourseView @JvmOverloads
             val weekItemView = WeekItemView(context)
             weekItemView.layoutParams = layoutParams
             weekItemView.week = weekText[(i + startOfWeek) % 7]
+            if (showCourseBorder) {
+                weekItemView.setBackgroundResource(R.drawable.bg_time_week_item)
+            }
             weekLayout.addView(weekItemView)
         }
     }
@@ -302,6 +305,9 @@ class CourseView @JvmOverloads
             timeItemView.courseIndex = index++
             timeItemView.showEndTime = showEndTime
             timeItemView.showIndex = showTimeIndex
+            if (showCourseBorder) {
+                timeItemView.setBackgroundResource(R.drawable.bg_time_week_item)
+            }
             timeLayout.addView(timeItemView)
         }
     }
@@ -322,6 +328,8 @@ class CourseView @JvmOverloads
                     courseTimeList.size,
                     context.getColor(R.color.colorSplitLine))
             else null
+
+        this.setBackgroundResource(if (showCourseBorder) R.drawable.bg_time_week_item else 0)
 
         val courseWidth = ((widthMeasured - courseTimeTitleWidth) / 7).toInt()
         for (course in courseList) {

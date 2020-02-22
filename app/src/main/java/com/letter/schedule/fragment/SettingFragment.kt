@@ -1,6 +1,7 @@
 package com.letter.schedule.fragment
 
 import android.os.Bundle
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.letter.schedule.R
 
