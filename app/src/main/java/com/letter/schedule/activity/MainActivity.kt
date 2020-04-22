@@ -176,21 +176,19 @@ class MainActivity : AppCompatActivity() {
             R.id.popup_delete -> {
                 val dialog = AlertDialog.Builder(this, R.style.DialogTheme)
                     .setMessage("${getString(R.string.main_activity_delete_dialog_message)} ${selectedCourse?.name}?")
-                    .setPositiveButton(R.string.main_activity_delete_positive_button,
-                        {
-                                dialogInterface, i ->
-                            dialogInterface.dismiss()
-                            courseView.courseList.remove(selectedCourse)
-                            selectedCourse?.delete()
-                            Toast.makeText(this, R.string.main_activity_toast_delete_complete, Toast.LENGTH_SHORT)
-                                .show()
-                            courseView.notifyClassChanged()
-                        })
-                    .setNegativeButton(R.string.main_activity_delete_negative_button,
-                        {
-                                dialogInterface, i ->
-                            dialogInterface.dismiss()
-                        })
+                    .setPositiveButton(R.string.main_activity_delete_positive_button
+                    ) { dialogInterface, _ ->
+                        dialogInterface.dismiss()
+                        courseView.courseList.remove(selectedCourse)
+                        selectedCourse?.delete()
+                        Toast.makeText(this, R.string.main_activity_toast_delete_complete, Toast.LENGTH_SHORT)
+                            .show()
+                        courseView.notifyClassChanged()
+                    }
+                    .setNegativeButton(R.string.main_activity_delete_negative_button
+                    ) { dialogInterface, _ ->
+                        dialogInterface.dismiss()
+                    }
                     .create()
                 dialog.show()
             }
@@ -296,11 +294,11 @@ class MainActivity : AppCompatActivity() {
                             nameList.add(value.name ?: "")
                         }
                         val builder = AlertDialog.Builder(this, R.style.DialogTheme)
-                            .setItems(nameList.toTypedArray(),
-                                {dialog, which ->
-                                    loadCourseTable(courseTableList[which])
-                                    dialog.dismiss()
-                                })
+                            .setItems(nameList.toTypedArray()
+                            ) { dialog, which ->
+                                loadCourseTable(courseTableList[which])
+                                dialog.dismiss()
+                            }
                         builder.create().show()
                     }
                 } else {
