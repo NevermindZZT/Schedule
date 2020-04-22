@@ -136,12 +136,13 @@ class CourseTable
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
             put(MediaStore.Images.Media.TITLE, fileName)
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Schedule")
-//            } else {
-//                put(MediaStore.Images.Media.DATA, "Pictures/Schedule")
-//            }
-            put(MediaStore.Images.Media.MIME_TYPE, "image/JPEG")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            } else {
+                put(MediaStore.MediaColumns.DATA,
+                    "${Environment.getExternalStorageDirectory().path}/${Environment.DIRECTORY_PICTURES}/$fileName")
+            }
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/JPEG")
         }
         val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         if (uri != null) {

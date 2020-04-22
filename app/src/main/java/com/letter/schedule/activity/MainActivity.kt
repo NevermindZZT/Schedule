@@ -123,18 +123,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             R.id.toolbar_save_picture -> {
-                val file = selectedTable?.saveAsPicture(this)
-                Toast.makeText(this,
-                    if (file != null) "${getString(R.string.main_activity_toast_save_picture_path)}${file.path}"
-                    else getString(R.string.main_activity_toast_save_picture_fail),
-                    Toast.LENGTH_SHORT)
-                    .show()
-//                val uri = selectedTable?.saveAsPictureToAlbum(this)
+//                val file = selectedTable?.saveAsPicture(this)
 //                Toast.makeText(this,
-//                    if (uri != null) R.string.main_activity_toast_save_picture_success
-//                    else R.string.main_activity_toast_save_picture_fail,
+//                    if (file != null) "${getString(R.string.main_activity_toast_save_picture_path)}${file.path}"
+//                    else getString(R.string.main_activity_toast_save_picture_fail),
 //                    Toast.LENGTH_SHORT)
 //                    .show()
+                val uri = selectedTable?.saveAsPictureToAlbum(this)
+                Toast.makeText(this,
+                    if (uri != null) R.string.main_activity_toast_save_picture_success
+                    else R.string.main_activity_toast_save_picture_fail,
+                    Toast.LENGTH_SHORT)
+                    .show()
             }
             R.id.toolbar_share -> {
                 if (selectedTable == null) {
