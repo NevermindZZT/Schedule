@@ -1,7 +1,6 @@
 package com.letter.schedule.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -27,7 +26,7 @@ import org.litepal.extension.findAll
  * @author Letter(zhangkeqiang@gmail.com)
  * @since 1.0.0
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     companion object {
         const val TAG = "MainActivity"
@@ -60,8 +59,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
-        // 设置为浅色状态栏
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         // 开启ActionBar home按钮并设置图标
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

@@ -25,10 +25,10 @@ constructor(context: Context, attrs: AttributeSet?=null, defStyleAttr: Int=0):
     set(value) {
         field = value
         nameText.text = value?.name
-        if (value?.teacher?.isEmpty() ?: true && value?.location?.isEmpty() ?: true) {
+        if (value?.teacher?.isEmpty() != false && value?.location?.isEmpty() != false) {
             extraText.visibility = View.GONE
         } else {
-            val extra = "${value?.teacher}@${value?.location}"
+            val extra = "${value.teacher}@${value.location}"
             extraText.text = extra
             extraText.visibility = View.VISIBLE
         }
@@ -41,6 +41,9 @@ constructor(context: Context, attrs: AttributeSet?=null, defStyleAttr: Int=0):
             if (bright < 0x80 && value.color.toLong().and(0xFF000000).ushr(24) > 0x20) {
                 nameText.setTextColor(Color.WHITE)
                 extraText.setTextColor(Color.WHITE)
+            } else {
+                nameText.setTextColor(Color.BLACK)
+                extraText.setTextColor(Color.BLACK)
             }
         }
     }

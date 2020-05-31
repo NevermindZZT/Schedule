@@ -1,7 +1,6 @@
 package com.letter.schedule.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -23,7 +22,7 @@ import org.litepal.extension.findAll
  * @author Letter(nevermindzzt@gmail.com)
  * @since 1.0.0
  */
-class CourseTableCreateActivity : AppCompatActivity(), View.OnClickListener {
+class CourseTableCreateActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var courseTableList : List<CourseTable>
 
@@ -31,7 +30,6 @@ class CourseTableCreateActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_table_create)
         setSupportActionBar(toolbar)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)

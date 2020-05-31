@@ -1,6 +1,5 @@
 package com.letter.schedule.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -23,7 +22,7 @@ import org.litepal.extension.find
  * @author Letter(nevermindzzt@gmail.com)
  * @since 1.0.0
  */
-class CourseEditActivity : AppCompatActivity() {
+class CourseEditActivity : BaseActivity() {
 
     companion object {
         val WEEK_TEXT = arrayOf("周日", "周一", "周二", "周三", "周四", "周五", "周六", "周日")
@@ -38,8 +37,6 @@ class CourseEditActivity : AppCompatActivity() {
         setContentView(R.layout.activity_course_edit)
 
         setSupportActionBar(toolbar)
-        // 设置为浅色状态栏
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         // 开启ActionBar home按钮并设置图标
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

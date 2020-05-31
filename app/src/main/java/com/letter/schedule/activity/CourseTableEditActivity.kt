@@ -2,13 +2,10 @@ package com.letter.schedule.activity
 
 import android.app.AlertDialog
 import android.app.Dialog
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.letter.schedule.R
@@ -20,7 +17,6 @@ import com.letter.schedule.dialog.CourseTimeDialog
 import kotlinx.android.synthetic.main.activity_course_table_edit.*
 import kotlinx.android.synthetic.main.activity_course_table_edit.courseTableNameText
 import kotlinx.android.synthetic.main.activity_course_table_edit.toolbar
-import kotlinx.android.synthetic.main.activity_main.*
 import org.litepal.LitePal
 import org.litepal.extension.find
 
@@ -29,7 +25,7 @@ import org.litepal.extension.find
  * @author Letter(nevermindzzt@gmail.com)
  * @since 1.0.0
  */
-class CourseTableEditActivity : AppCompatActivity() {
+class CourseTableEditActivity : BaseActivity() {
 
     companion object {
         const val TAG = "CourseTableEditActivity"
@@ -45,8 +41,6 @@ class CourseTableEditActivity : AppCompatActivity() {
         setContentView(R.layout.activity_course_table_edit)
 
         setSupportActionBar(toolbar)
-        // 设置为浅色状态栏
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         // 开启ActionBar home按钮并设置图标
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
